@@ -105,6 +105,7 @@ func listFiles(dir string, shareID string, parentFile string, token string) ([]A
 
 	return files, err
 }
+
 func getShareByAnonymous(shareID string) (string, string, error) {
 	buf := bytes.NewBuffer(nil)
 	buf.WriteString(fmt.Sprintf(`{

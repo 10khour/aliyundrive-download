@@ -22,7 +22,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("抓取文件列表...")
 	token, err := pkg.ShareToken(shareID, "")
 	if err != nil {
 		log.Fatal(err)
@@ -32,6 +31,6 @@ func main() {
 		log.Fatal(err)
 	}
 	for index, file := range files {
-		log.Printf("[%d/%d] %s", index+1, len(files), file.Name)
+		log.Printf("%s [%d/%d] ", file.Name, index+1, len(files))
 	}
 }
