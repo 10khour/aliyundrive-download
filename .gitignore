@@ -4,7 +4,7 @@
 *.dll
 *.so
 *.dylib
-
+aliyundrive-download
 # Test binary, built with `go test -c`
 *.test
 
