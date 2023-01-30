@@ -179,17 +179,17 @@ func GetShareDownloadURL(driveID string, fileID string, shareID string, shareTok
 
 	req, _ := http.NewRequest(http.MethodPost, "https://api.aliyundrive.com/v2/file/get_share_link_download_url", buf)
 	req.Header.Add("content-type", "application/json")
-	req.Header.Add("Authorization",  "Bearer\t" + accessToken)
+	req.Header.Add("Authorization", "Bearer\t"+accessToken)
 	req.Header.Add("x-share-token", shareToken)
 	res, err := httpClient.Do(req)
 	if err != nil {
 		return "", err
 	}
-	printHttpBody(res)
 	defer res.Body.Close()
 	body, err := readJson(res)
+	println(body)
 	if err != nil {
 		return "", err
 	}
-	return gjson.Get(body, "share_token").String(), nil
+	return gjson.Get(body, "download_url").String(), nil
 }
