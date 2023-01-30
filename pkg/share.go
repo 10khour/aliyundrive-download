@@ -172,3 +172,24 @@ func ShareToken(shareID string, passwd string) (string, error) {
 	}
 	return gjson.Get(body, "share_token").String(), nil
 }
+
+func GetShareDownloadURL(driveID string, fileID string, shareID string, shareToken string, accessToken string) (string, error) {
+	buf := bytes.NewBuffer(nil)
+	buf.WriteString(fmt.Sprintf(`{"drive_id":"%s","file_id":"%s","expire_sec":600,"share_id":"%s"}`, driveID, fileID, shareID))
+
+	req, _ := http.NewRequest(http.MethodPost, "https://api.aliyundrive.com/v2/file/get_share_link_download_url", buf)
+	req.Header.Add("content-type", "application/json")
+	req.Header.Add("Authorization",  "Bearer\t" + accessToken)
+	req.Header.Add("x-share-token", shareToken)
+	res, err := httpClient.Do(req)
+	if err != nil {
+		return "", err
+	}
+	printHttpBody(res)
+	defer res.Body.Close()
+	body, err := readJson(res)
+	if err != nil {
+		return "", err
+	}
+	return gjson.Get(body, "share_token").String(), nil
+}

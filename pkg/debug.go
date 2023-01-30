@@ -7,7 +7,6 @@ import (
 )
 
 func printHttpBody(response *http.Response) {
-	defer response.Body.Close()
 	buf, err := io.ReadAll(response.Body)
 	if err != nil {
 		log.Fatal(err)

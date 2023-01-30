@@ -17,6 +17,11 @@ func init() {
 }
 
 func main() {
+	accessToken, err := pkg.Login()
+	if err != nil {
+		log.Fatalf("登录失败 %s", err)
+	}
+	log.Printf("登录成功 token %s", accessToken)
 	log.Printf("%s\n", url)
 	shareID, _, _, err := pkg.GetShareInfo(url)
 	if err != nil {
@@ -32,5 +37,6 @@ func main() {
 	}
 	for index, file := range files {
 		log.Printf("%s [%d/%d] ", file.Name, index+1, len(files))
+		pkg.GetShareDownloadURL(file.DriveID, file.FileID, file.ShareID, token, "")
 	}
 }
