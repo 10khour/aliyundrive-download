@@ -195,7 +195,7 @@ func GetShareDownloadURL(driveID string, fileID string, shareID string, shareTok
 }
 
 func getRealDownloadURL(directURL string) (string, error) {
-	log.Printf("获取 %s 重定向后的地址", directURL)
+	// 关闭自动重定向
 	client := &http.Client{
 		CheckRedirect: func(req *http.Request, via []*http.Request) error {
 			return http.ErrUseLastResponse
@@ -205,18 +205,15 @@ func getRealDownloadURL(directURL string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	req.Header.Add("user-agent", "curl/7.87.0")
+	// req.Header.Add("user-agent", "curl/7.87.0")
 	req.Header.Add("accept", "*/*")
 	res, err := client.Do(req)
 	if err != nil {
 		return "", err
 	}
-	printHttpBody(res)
-	log.Printf("http %d", res.StatusCode)
 	realURL := res.Header.Get("location")
 	if len(realURL) == 0 {
 		return "", fmt.Errorf("重定向地址为空")
 	}
-	log.Printf("下载地址 %s\n", realURL)
 	return realURL, nil
 }

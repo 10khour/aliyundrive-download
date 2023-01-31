@@ -6,14 +6,13 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"path"
 	"path/filepath"
 
 	"github.com/mattn/go-runewidth"
 	"github.com/schollz/progressbar/v3"
 )
 
-func DownloadFile(downloadURL string, filename string, accessToken string) error {
+func DownloadFile(prompt string, downloadURL string, filename string, accessToken string) error {
 	req, err := http.NewRequest(http.MethodGet, downloadURL, nil)
 	if err != nil {
 		return err
@@ -46,8 +45,9 @@ func DownloadFile(downloadURL string, filename string, accessToken string) error
 	}
 	bar := progressbar.NewOptions(
 		int(res.ContentLength),
+		progressbar.OptionShowBytes(true),
 		progressbar.OptionSetWriter(os.Stdout),
-		progressbar.OptionSetDescription(runewidth.FillRight(path.Base(filename), 40)),
+		progressbar.OptionSetDescription(runewidth.FillRight(prompt, 40)),
 		progressbar.OptionOnCompletion(func() {
 			fmt.Printf("\n")
 		}),
