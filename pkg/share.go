@@ -181,15 +181,42 @@ func GetShareDownloadURL(driveID string, fileID string, shareID string, shareTok
 	req.Header.Add("content-type", "application/json")
 	req.Header.Add("Authorization", "Bearer\t"+accessToken)
 	req.Header.Add("x-share-token", shareToken)
+	req.Host = "api.aliyundrive.com"
 	res, err := httpClient.Do(req)
 	if err != nil {
 		return "", err
 	}
 	defer res.Body.Close()
 	body, err := readJson(res)
-	println(body)
 	if err != nil {
 		return "", err
 	}
-	return gjson.Get(body, "download_url").String(), nil
+	return getRealDownloadURL(gjson.Get(body, "download_url").String())
+}
+
+func getRealDownloadURL(directURL string) (string, error) {
+	log.Printf("获取 %s 重定向后的地址", directURL)
+	client := &http.Client{
+		CheckRedirect: func(req *http.Request, via []*http.Request) error {
+			return http.ErrUseLastResponse
+		},
+	}
+	req, err := http.NewRequest(http.MethodGet, directURL, nil)
+	if err != nil {
+		return "", err
+	}
+	req.Header.Add("user-agent", "curl/7.87.0")
+	req.Header.Add("accept", "*/*")
+	res, err := client.Do(req)
+	if err != nil {
+		return "", err
+	}
+	printHttpBody(res)
+	log.Printf("http %d", res.StatusCode)
+	realURL := res.Header.Get("location")
+	if len(realURL) == 0 {
+		return "", fmt.Errorf("重定向地址为空")
+	}
+	log.Printf("下载地址 %s\n", realURL)
+	return realURL, nil
 }

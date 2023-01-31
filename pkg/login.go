@@ -42,7 +42,6 @@ func Login() (string, string, error) {
 		case "SCANED":
 			log.Print("已扫描，登录中...\n")
 		case "NEW":
-			log.Print("请使用阿里云盘手机客户端扫码登录\n")
 		case "EXPIRED":
 			log.Print("二维码过期\n")
 			return "", "", fmt.Errorf("二维码过期")
@@ -192,7 +191,6 @@ func login(code string) (string, string, error) {
 		return "", "", err
 	}
 	body, _ := readJson(res)
-	println(body)
 	if res.StatusCode != http.StatusOK {
 		return "", "", fmt.Errorf("login http %d", res.StatusCode)
 	}

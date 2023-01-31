@@ -12,22 +12,23 @@ var (
 )
 
 func init() {
-	flag.StringVar(&url, "url", "https://www.aliyundrive.com/s/ydCwbMCNqgG", "分享网址")
+	flag.StringVar(&url, "url", "https://www.aliyundrive.com/s/Q7RLN7WEbrx", "分享网址")
 	flag.Parse()
 }
 
 func main() {
-	accessToken, _, err := pkg.Login()
+	accessToken, refreshToken, err := pkg.Login()
 	if err != nil {
 		log.Fatalf("登录失败 %s", err)
 	}
-	log.Printf("登录成功")
 	log.Printf("%s\n", url)
 	shareID, _, _, err := pkg.GetShareInfo(url)
 	if err != nil {
 		log.Fatal(err)
 	}
 	shareToken, err := pkg.ShareToken(shareID, "")
+	log.Printf("登录成功")
+
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -41,7 +42,7 @@ func main() {
 			log.Fatal(err)
 		}
 		println(downloadURL)
-		if err := pkg.DownloadFile(downloadURL, file.Name); err != nil {
+		if err := pkg.DownloadFile(downloadURL, file.Name, refreshToken); err != nil {
 			log.Fatal(err)
 		}
 		log.Printf("%s 下载完成 [%d/%d] ", file.Name, index+1, len(files))

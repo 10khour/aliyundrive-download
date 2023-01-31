@@ -13,15 +13,16 @@ import (
 	"github.com/schollz/progressbar/v3"
 )
 
-func DownloadFile(downloadURL string, filename string) error {
+func DownloadFile(downloadURL string, filename string, accessToken string) error {
 	req, err := http.NewRequest(http.MethodGet, downloadURL, nil)
 	if err != nil {
 		return err
 	}
 	req.Header.Add("user-agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36")
-	// req.Header.Set("Referer", "https://www.aliyundrive.com/")
-	req.Header.Set("Accept-Encoding", "gzip, deflate, br")
-	req.Header.Set("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8")
+	req.Header.Set("Referer", "https://www.aliyundrive.com/")
+	req.Header.Add("Accept-Encoding", "gzip, deflate, br")
+	req.Header.Add("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8")
+	req.Header.Add("Authorization", "Bearer\t"+accessToken)
 	res, err := httpClient.Do(req)
 	if err != nil {
 		return err
