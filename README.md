@@ -6,7 +6,7 @@
 go install github.com/10khour/aliyundrive-download@latest
 ```
 ```
- go run main.go
+ galiyundrive-download --url https://www.aliyundrive.com/s/Q7RLN7WEbrx
 2023/01/31 15:06:19 请使用阿里云盘手机客户端扫码登录
 2023/01/31 15:06:22 已扫描，登录中...
 2023/01/31 15:06:24 登录成功
